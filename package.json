@@ -48,6 +48,7 @@
     "howler": "^2.2.3"
   },
   "devDependencies": {
+    "@ant-design/icons": "^5.0.1",
     "@commitlint/cli": "^17.1.2",
     "@commitlint/config-conventional": "^17.1.0",
     "@types/howler": "^2.2.7",

@@ -1,4 +1,9 @@
-import { notification, Slider } from 'antd';
+import {
+  CaretRightOutlined,
+  DeleteOutlined,
+  PauseOutlined,
+} from '@ant-design/icons';
+import { Button, Empty, List, notification, Slider } from 'antd';
 import axios, { AxiosResponse } from 'axios';
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
@@ -51,6 +56,46 @@ export default () => {
     }, 1000);
   }, []);
 
+  const PlayToggle = () => {
+    if (Music?.playing()) {
+      Music?.stop();
+    } else {
+      Music?.play();
+      //@ts-ignore
+      SetDuration(Music?.duration());
+    }
+  };
+
+  const PlayButton = () => {
+    if (Music?.playing()) {
+      return (
+        <Button
+          onClick={PlayToggle}
+          type="primary"
+          shape="circle"
+          icon={<PauseOutlined />}
+        />
+      );
+    } else {
+      return (
+        <Button
+          onClick={PlayToggle}
+          type="primary"
+          shape="circle"
+          icon={<CaretRightOutlined />}
+        />
+      );
+    }
+  };
+
+  const [data, SetData] = useState([
+    'Racing car sprays burning fuel into crowd.',
+    'Japanese princess to wed commoner.',
+    'Australian walks 100km after outback crash.',
+    'Man charged over missing wedding girl.',
+    'Los Angeles battles huge wildfires.',
+  ]);
+
   return (
     <>
       <div>
@@ -74,17 +119,30 @@ export default () => {
             value={Load}
             disabled={false}
           />
-          <button
-            type={'button'}
-            onClick={() => {
-              Music?.play();
-              SetDuration(Music?.duration());
-              console.log(1);
-            }}
-          >
-            play
-          </button>
+          {PlayButton()}
         </div>
+        <List
+          bordered
+          style={{ height: '100px', overflowY: 'scroll' }}
+          dataSource={data}
+          locale={{ emptyText: <Empty description={'这里没有东西'} /> }}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <DeleteOutlined
+                  key={'1'}
+                  onClick={() => {
+                    let temp = structuredClone(data);
+                    temp.splice(temp.indexOf(item), 1);
+                    SetData(temp);
+                  }}
+                />,
+              ]}
+            >
+              {item}
+            </List.Item>
+          )}
+        />
       </div>
     </>
   );
